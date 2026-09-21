@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Daily Routine</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; font-family: Arial, Helvetica, sans-serif; background:linear-gradient(135deg,#fff8e7,#eaf7ff); display:flex; align-items:center; justify-content:center; color:#243447; }
+  .screen { width:100vw; min-height:100vh; padding:4vh 5vw; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .time { font-size:clamp(64px,14vw,180px); font-weight:800; line-height:1; letter-spacing:-4px; }
+  .date { margin-top:10px; font-size:clamp(20px,3vw,38px); opacity:.65; }
+  .card { margin-top:4vh; width:min(900px,90vw); padding:4vh 4vw; border-radius:40px; background:rgba(255,255,255,.88); box-shadow:0 15px 50px rgba(40,70,90,.15); }
+  .icon { font-size:clamp(90px,16vw,190px); line-height:1.05; }
+  .activity { margin-top:2vh; font-size:clamp(32px,6vw,76px); font-weight:800; text-transform:uppercase; line-height:1.08; }
+  .next { margin-top:3vh; font-size:clamp(18px,2.5vw,30px); opacity:.55; }
+  .hint { position:fixed; bottom:12px; font-size:13px; opacity:.35; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div id="time" class="time"></div>
+  <div id="date" class="date"></div>
+  <div class="card">
+    <div id="icon" class="icon"></div>
+    <div id="activity" class="activity"></div>
+    <div id="next" class="next"></div>
+  </div>
+  <div class="hint">My Daily Routine</div>
+</div>
+<script>
+const schedule = [
+  ["08:00", "Wake Up", "🌞"],
+  ["08:05", "Breakfast", "🥣"],
+  ["08:15", "Bathroom & Brush Your Teeth", "🚽🪥"],
+  ["08:20", "Get Your Uniform On", "👕"],
+  ["08:30", "Say Goodbye to Mommy & Go to School", "🎒"],
+  ["08:35", "School Time", "🏫"],
+  ["15:50", "Shoes Off & Wash Hands", "👟🧼"],
+  ["16:00", "Snack Time", "🍎"],
+  ["17:00", "Homework", "✏️"],
+  ["18:00", "Play Time", "🧸"],
+  ["19:30", "Shower & Put on PJs", "🚿🛏️"],
+  ["20:00", "Dinner", "🍽️"],
+  ["21:00", "Brush Your Teeth & Bedtime Story", "🪥📖"],
+  ["21:30", "Sleeping", "😴"]
+];
+
+function mins(t){ const [h,m]=t.split(':').map(Number); return h*60+m; }
+function update(){
+  const now = new Date();
+  const current = now.getHours()*60 + now.getMinutes();
+  let idx = -1;
+  for(let i=0;i<schedule.length;i++) if(current >= mins(schedule[i][0])) idx=i;
+  if(idx === -1) idx = schedule.length-1;
+  const item=schedule[idx];
+  document.getElementById('time').textContent=now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('date').textContent=now.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'});
+  document.getElementById('icon').textContent=item[2];
+  document.getElementById('activity').textContent=item[1];
+  const next = schedule[idx+1];
+  document.getElementById('next').textContent = next ? `Next: ${next[0]} — ${next[1]}` : 'Good night! 🌙';
+}
+update();
+setInterval(update, 1000);
+</script>
+</body>
+</html>
